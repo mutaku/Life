@@ -5,8 +5,14 @@ Conway's Game of Life in Python
 
 
 This version:
-  - *Left* click to toggle squares and set desired starting pattern
-  - Iterate through simulation by *Right* clicking or scrolling with the *mouse wheel*
+  - Toggle squares and set desired starting pattern
+  - Iterate through simulation by using an iteration method (outlined below)
+
+Key press guide:
+  - **LEFT CLICK** toggle square viability to setup grid or adjust during simulation
+  - **RIGHT CLICK** iterate through simulation (may be held down)
+  - **r** iterate through simulation (may be held down)
+  - **c** reset the grid
 
 ![starting out](http://www.mutaku.com/conway1.png)
 ![evolution](http://www.mutaku.com/conway2.png)
