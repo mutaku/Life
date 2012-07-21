@@ -1,21 +1,25 @@
 #!/usr/bin/env python
 
 import sys
-import itertools
 import pygame
 from pygame.locals import *
 
+# user set items
+DEAD_COLOR = "WHITE"
+ALIVE_COLOR = "BLUE"
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+
 # window shit
 pygame.init()
-DS = pygame.display.set_mode((400, 400), 0, 32)
+DS = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), 0, 32)
 pygame.display.set_caption('I CAN HAZ INTELLIGENCE?')
 SCREEN = pygame.display.get_surface()
 WIDTH = DS.get_width()
 HEIGHT = DS.get_height()
-
+pygame.key.set_repeat(100, 100)
 
 # some important numbers
-ALTER = 5
 BOXSIZE = 10
 FPS = 15
 fpsClock = pygame.time.Clock()
@@ -30,7 +34,7 @@ COLORS = {
     'BLUE': (0, 0, 255)
     }
 DS.fill(COLORS['WHITE'])
-ALIVE = {0: COLORS['WHITE'], 1: COLORS['BLUE']}
+ALIVE = {0: COLORS[DEAD_COLOR], 1: COLORS[ALIVE_COLOR]}
 
 # coordinates and such
 mousex, mousey = 0, 0
@@ -41,8 +45,11 @@ grid = {}
 
 
 class Box():
-    def __init__(self):
-        pass
+    def __init__(self, square=None):
+        if square:
+            self.x, self.y = square
+        else:
+            pass
 
 def m(*args):
     for a in args:
@@ -97,12 +104,12 @@ def togglebox(x, y):
     box = translate(x, y)
     if grid[(box.x, box.y)][0]:
         grid[(box.x, box.y)] = (0, 0)
-        event = "died"
+        event = "Died!"
     else:
         grid[(box.x, box.y)] = (1, 0)
-        event = "is born"
+        event = "is Born!"
     changecolor(box, n=0)
-    m(box.x, box.y, event, amialive((box.x, box.y)))
+    m(box.x, box.y, event)
 
 def hoverstatus(x, y):
     # this is slightly redundant but mainly for testing only
@@ -126,11 +133,17 @@ def simulate():
             grid[square] = (grid[square][0], 1)
         else:
             grid[square] = (grid[square][0], 0)
-        box = Box()
-        box.x, box.y = square
+        box = Box(square)
         changecolor(box, n=1)
     for square in grid:
         grid[square] = (grid[square][1], 0)
+
+def clear():
+    for square in grid:
+        grid[square] = (0, 0)
+        box = Box(square)
+        changecolor(box)
+    m("* Grid reset")
 
 # setup some things
 setupgrid()
@@ -143,13 +156,16 @@ while True:
             sys.exit()
         elif event.type == MOUSEMOTION:
             mousex, mousey = event.pos
-
         elif event.type == MOUSEBUTTONDOWN:
             mousex, mousey = event.pos
             if pygame.mouse.get_pressed()[0] == 1:
                 leftclicked = True
             else:
                 rightclicked = True
+        elif event.type == KEYDOWN and pygame.key.name(event.key) == "c":
+            clear()
+        elif event.type == KEYDOWN and pygame.key.name(event.key) == "r":
+            simulate()
 
         if leftclicked:
             leftclicked = False
