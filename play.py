@@ -102,7 +102,7 @@ def translate(x, y):
 
 def togglebox(x, y):
     box = translate(x, y)
-    if grid[(box.x, box.y)][0]:
+    if isactive((box.x, box.y)):
         grid[(box.x, box.y)] = (0, 0)
         event = "Died!"
     else:
