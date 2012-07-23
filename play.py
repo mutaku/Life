@@ -80,7 +80,7 @@ def surrounds(box):
 
 def amialive(box):
     n = surrounds(box)
-    if 2 <= n <= 3 and grid[box][0] == 1 or n == 3 and grid[box][0] == 0:
+    if 2 <= n <= 3 and isactive(box) or n == 3 and not isactive(box):
         return True
     else:
         return False
