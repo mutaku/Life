@@ -17,12 +17,12 @@ pygame.display.set_caption('I CAN HAZ INTELLIGENCE?')
 SCREEN = pygame.display.get_surface()
 WIDTH = DS.get_width()
 HEIGHT = DS.get_height()
-pygame.key.set_repeat(10, 10)
+pygame.key.set_repeat(50, 10)
 
 # some important numbers
 BOXSIZE = 10
-FPS = 20
-fpsClock = pygame.time.Clock()
+FPS = 60
+#fpsClock = pygame.time.Clock()
 
 
 # some colors
@@ -176,4 +176,4 @@ while True:
             simulate()
 
     pygame.display.update()
-    fpsClock.tick(FPS)
+    #fpsClock.tick(FPS)
