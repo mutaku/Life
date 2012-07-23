@@ -14,5 +14,5 @@ Key press guide:
   - **r** iterate through simulation (may be held down)
   - **c** reset the grid
 
-![starting out](http://www.mutaku.com/conway1.png)
-![evolution](http://www.mutaku.com/conway2.png)
+![starting out](http://www.mutaku.com/conway5-4.png)
+![evolution](http://www.mutaku.com/conway5-2.png)
