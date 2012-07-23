@@ -17,11 +17,11 @@ pygame.display.set_caption('I CAN HAZ INTELLIGENCE?')
 SCREEN = pygame.display.get_surface()
 WIDTH = DS.get_width()
 HEIGHT = DS.get_height()
-pygame.key.set_repeat(100, 100)
+pygame.key.set_repeat(10, 10)
 
 # some important numbers
 BOXSIZE = 10
-FPS = 15
+FPS = 20
 fpsClock = pygame.time.Clock()
 
 
@@ -81,7 +81,6 @@ def surrounds(box):
 def amialive(box):
     n = surrounds(box)
     if 2 <= n <= 3 and grid[box][0] == 1 or n == 3 and grid[box][0] == 0:
-        print n, grid[box]
         return True
     else:
         return False
