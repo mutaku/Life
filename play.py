@@ -22,8 +22,6 @@ pygame.key.set_repeat(100, 10)
 # some important numbers
 BOXSIZE = 10
 FPS = 60
-#fpsClock = pygame.time.Clock()
-
 
 # some colors
 COLORS = {
