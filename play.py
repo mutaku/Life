@@ -17,7 +17,7 @@ pygame.display.set_caption('I CAN HAZ INTELLIGENCE?')
 SCREEN = pygame.display.get_surface()
 WIDTH = DS.get_width()
 HEIGHT = DS.get_height()
-pygame.key.set_repeat(50, 10)
+pygame.key.set_repeat(100, 10)
 
 # some important numbers
 BOXSIZE = 10
@@ -42,7 +42,8 @@ leftclicked, rightclicked = False, False
 
 # this is our grid - (LEFT, TOP) : STATE
 grid = {}
-
+# this is our state change array
+changestate = []
 
 class Box():
     def __init__(self, square=None):
@@ -127,6 +128,12 @@ def changecolor(box, n=0):
     SCREEN.fill(ALIVE[grid[(box.x, box.y)][n]],
             (box.x+1, box.y+1, BOXSIZE-2, BOXSIZE-2))
 
+def runsimulation():
+    if not len(changestate) or changestate[-1]:
+        simulate()
+    else:
+        pass
+
 def simulate():
     for square in grid:
         if amialive(square):
@@ -135,14 +142,21 @@ def simulate():
             grid[square] = (grid[square][0], 0)
         box = Box(square)
         changecolor(box, n=1)
+    changestate.append([])
     for square in grid:
+        if grid[square][0] != grid[square][1]:
+            changestate[-1].append(square)
         grid[square] = (grid[square][1], 0)
+
+def printstate():
+    m(len(changestate), ' state changes, last two changes : ', changestate[-2:])
 
 def clear():
     for square in grid:
         grid[square] = (0, 0)
         box = Box(square)
         changecolor(box)
+    del changestate[:]
     m("* Grid reset")
 
 # setup some things
@@ -164,8 +178,10 @@ while True:
                 rightclicked = True
         elif event.type == KEYDOWN and pygame.key.name(event.key) == "c":
             clear()
+        elif event.type == KEYDOWN and pygame.key.name(event.key) == "p":
+            printstate()
         elif event.type == KEYDOWN and pygame.key.name(event.key) == "r":
-            simulate()
+            runsimulation()
 
         if leftclicked:
             leftclicked = False
@@ -173,7 +189,7 @@ while True:
         elif rightclicked:
             #hoverstatus(mousex, mousey)
             rightclicked = False
-            simulate()
+            runsimulation()
 
     pygame.display.update()
     #fpsClock.tick(FPS)
