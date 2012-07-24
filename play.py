@@ -128,12 +128,17 @@ def changecolor(box, n=0):
     SCREEN.fill(ALIVE[grid[(box.x, box.y)][n]],
             (box.x+1, box.y+1, BOXSIZE-2, BOXSIZE-2))
 
-def runsimulation():
-    if not len(changestate) or changestate[-1]:
-        simulate()
-    else:
-        pass
+def runsimulation(f):
+    def checkrun():
+        if len(changestate) >= 3 and changestate[-3] == changestate[-1]:
+            m("stuck in loop")
+        elif not len(changestate) or changestate[-1]:
+            f()
+        else:
+            m(len(changestate), " state changes - finished.")
+    return checkrun
 
+@runsimulation
 def simulate():
     for square in grid:
         if amialive(square):
@@ -151,11 +156,12 @@ def simulate():
 def printstate():
     m(len(changestate), ' state changes, last two changes : ', changestate[-2:])
 
-def clear():
-    for square in grid:
-        grid[square] = (0, 0)
-        box = Box(square)
-        changecolor(box)
+def clear(keep=False):
+    if not keep:
+        for square in grid:
+            grid[square] = (0, 0)
+            box = Box(square)
+            changecolor(box)
     del changestate[:]
     m("* Grid reset")
 
@@ -178,10 +184,12 @@ while True:
                 rightclicked = True
         elif event.type == KEYDOWN and pygame.key.name(event.key) == "c":
             clear()
+        elif event.type == KEYDOWN and pygame.key.name(event.key) == "k":
+            clear(keep=True)
         elif event.type == KEYDOWN and pygame.key.name(event.key) == "p":
             printstate()
         elif event.type == KEYDOWN and pygame.key.name(event.key) == "r":
-            runsimulation()
+            simulate()
 
         if leftclicked:
             leftclicked = False
@@ -189,7 +197,7 @@ while True:
         elif rightclicked:
             #hoverstatus(mousex, mousey)
             rightclicked = False
-            runsimulation()
+            simulate()
 
     pygame.display.update()
     #fpsClock.tick(FPS)
