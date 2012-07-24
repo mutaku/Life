@@ -66,17 +66,20 @@ def buildrects():
             for k in range(0, HEIGHT, BOXSIZE)]
     return rects
 
-def surrounds(box):
+def mapping(box):
     x, y = box
-    alivetotal = 0
-    mapping = list(
+    zone = list(
             (j+WIDTH if j == -BOXSIZE else (j-WIDTH if j == WIDTH else j),
                 k+HEIGHT if k == -BOXSIZE else (k-HEIGHT if k == HEIGHT else k))
                 for j in range(x-BOXSIZE, x+2*BOXSIZE, BOXSIZE)
                 for k in range(y-BOXSIZE, y+2*BOXSIZE, BOXSIZE)
                 )
-    mapping.remove((x, y))
-    for i in mapping:
+    zone.remove((x, y))
+    return zone
+
+def surrounds(box):
+    alivetotal = 0
+    for i in mapping(box):
         if isactive(i):
             alivetotal += 1
     return alivetotal
@@ -109,11 +112,6 @@ def togglebox(x, y):
     changecolor(box, n=0)
     m(box.x, box.y, event)
 
-def hoverstatus(x, y):
-    # this is slightly redundant but mainly for testing only
-    box = Box((x, y))
-    m(box.x, box.y, 'next turn ->', amialive((box.x, box.y)))
-
 def setupgrid():
     for r in buildrects():
         grid[(r[0], r[1])] = (0, 0)
@@ -137,20 +135,36 @@ def runsimulation(f):
 
 @runsimulation
 def simulate():
-    for square in grid:
-        if amialive(square):
-            grid[square] = (grid[square][0], 1)
-        else:
-            grid[square] = (grid[square][0], 0)
-        box = Box(square)
-        changecolor(box, n=1)
+    if not len(changestate):
+        array = grid
+    else:
+        array = []
+        array.extend(changestate[-1])
+        for box in changestate[-1]:
+            array.extend(mapping(box))
+        array = list(set(array))
+
+    for square in array:
+        nextturn(square)
     changestate.append([])
-    for square in grid:
-        if grid[square][0] != grid[square][1]:
-            changestate[-1].append(square)
-        grid[square] = (grid[square][1], 0)
+    for square in array:
+        makechanges(square)
+
+def nextturn(square):
+    if amialive(square):
+        grid[square] = (grid[square][0], 1)
+    else:
+        grid[square] = (grid[square][0], 0)
+    box = Box(square)
+    changecolor(box, n=1)
+
+def makechanges(square):
+    if grid[square][0] != grid[square][1]:
+        changestate[-1].append(square)
+    grid[square] = (grid[square][1], 0)
 
 def printstate():
+    # this is just for debugging
     m(len(changestate), ' state changes, last two changes : ', changestate[-2:])
 
 def clear(keep=False):
@@ -192,9 +206,7 @@ while True:
             leftclicked = False
             togglebox(mousex, mousey)
         elif rightclicked:
-            #hoverstatus(mousex, mousey)
             rightclicked = False
             simulate()
 
     pygame.display.update()
-    #fpsClock.tick(FPS)
