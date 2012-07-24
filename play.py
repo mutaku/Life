@@ -46,11 +46,13 @@ grid = {}
 changestate = []
 
 class Box():
-    def __init__(self, square=None):
+    def __init__(self, square=False):
         if square:
-            self.x, self.y = square
+            self.x, self.y = self.translate(square)
         else:
             pass
+    def translate(self, s):
+        return (rounder(s[0]), rounder(s[1]))
 
 def m(*args):
     for a in args:
@@ -96,13 +98,8 @@ def isactive(box):
     else:
         return False
 
-def translate(x, y):
-    box = Box()
-    box.x, box.y = rounder(x), rounder(y)
-    return box
-
 def togglebox(x, y):
-    box = translate(x, y)
+    box = Box((x, y))
     if isactive((box.x, box.y)):
         grid[(box.x, box.y)] = (0, 0)
         event = "Died!"
@@ -114,7 +111,7 @@ def togglebox(x, y):
 
 def hoverstatus(x, y):
     # this is slightly redundant but mainly for testing only
-    box = translate(x, y)
+    box = Box((x, y))
     m(box.x, box.y, 'next turn ->', amialive((box.x, box.y)))
 
 def setupgrid():
