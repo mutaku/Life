@@ -207,7 +207,6 @@ while True:
             simulate()
 
         if leftclicked:
-            #leftclicked = False
             togglebox(mousex, mousey)
         if rightclicked:
             rightclicked = False

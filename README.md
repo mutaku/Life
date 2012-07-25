@@ -14,6 +14,8 @@ Key press guide:
   - **r** iterate through simulation (may be held down)
   - **c** reset the grid and game
   - **k** reset the game only - keep the currently active squares
+  - **p** print out current state information
+  - **q** quit
 
 ![starting out](http://www.mutaku.com/conway5-4.png)
 ![evolution](http://www.mutaku.com/conway5-2.png)
