@@ -17,11 +17,10 @@ pygame.display.set_caption('I CAN HAZ INTELLIGENCE?')
 SCREEN = pygame.display.get_surface()
 WIDTH = DS.get_width()
 HEIGHT = DS.get_height()
-pygame.key.set_repeat(100, 10)
+pygame.key.set_repeat(500, 10)
 
 # some important numbers
 BOXSIZE = 10
-FPS = 60
 
 # some colors
 COLORS = {
@@ -53,9 +52,8 @@ class Box():
         return (rounder(s[0]), rounder(s[1]))
 
 def m(*args):
-    for a in args:
-        print a,
-    print
+    sys.stdout.write("\r\x1b[K"+" ".join([str(x) for x in args]))
+    sys.stdout.flush()
 
 def buildrects():
     # rect is declared left,top,width,height
@@ -124,7 +122,7 @@ def changecolor(box, n=0):
 def runsimulation(f):
     def checkrun():
         if len(changestate) >= 3 and changestate[-3] == changestate[-1]:
-            m("stuck in loop")
+            m(len(changestate), " state changes - stuck oscillating.")
         elif not len(changestate) or changestate[-1]:
             f()
         else:
@@ -174,6 +172,11 @@ def clear(keep=False):
     del changestate[:]
     m("* Grid reset")
 
+def exit():
+    pygame.quit()
+    m()
+    sys.exit()
+
 # setup some things
 setupgrid()
 
@@ -181,16 +184,19 @@ setupgrid()
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+            exit()
         elif event.type == MOUSEMOTION:
             mousex, mousey = event.pos
+        elif event.type == KEYDOWN and pygame.key.name(event.key) == "q":
+            exit()
         elif event.type == MOUSEBUTTONDOWN:
             mousex, mousey = event.pos
             if pygame.mouse.get_pressed()[0] == 1:
                 leftclicked = True
             else:
                 rightclicked = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            leftclicked, rightclicked = False, False
         elif event.type == KEYDOWN and pygame.key.name(event.key) == "c":
             clear()
         elif event.type == KEYDOWN and pygame.key.name(event.key) == "k":
@@ -201,9 +207,9 @@ while True:
             simulate()
 
         if leftclicked:
-            leftclicked = False
+            #leftclicked = False
             togglebox(mousex, mousey)
-        elif rightclicked:
+        if rightclicked:
             rightclicked = False
             simulate()
 
