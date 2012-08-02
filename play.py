@@ -147,12 +147,17 @@ def simulate():
         makechanges(square)
 
 def nextturn(square):
+    old, new = grid[square][0], grid[square][1]
     if amialive(square):
-        grid[square] = (grid[square][0], 1)
+        grid[square] = (old, 1)
     else:
-        grid[square] = (grid[square][0], 0)
+        grid[square] = (old, 0)
     box = Box(square)
-    changecolor(box, n=1)
+
+    if old != new:
+        changecolor(box, n=1)
+    else:
+        pass
 
 def makechanges(square):
     if grid[square][0] != grid[square][1]:
