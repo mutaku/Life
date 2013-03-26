@@ -46,8 +46,6 @@ class Box():
     def __init__(self, square=False):
         if square:
             self.x, self.y = self.translate(square)
-        else:
-            pass
     def translate(self, s):
         return (rounder(s[0]), rounder(s[1]))
 
@@ -84,8 +82,7 @@ def amialive(box):
     n = surrounds(box)
     if 2 <= n <= 3 and isactive(box) or n == 3 and not isactive(box):
         return True
-    else:
-        return False
+    return False
 
 def rounder(n, base=BOXSIZE):
     # always down
@@ -94,8 +91,7 @@ def rounder(n, base=BOXSIZE):
 def isactive(box):
     if grid[box][0] == 1:
         return True
-    else:
-        return False
+    return False
 
 def togglebox(x, y):
     box = Box((x, y))
@@ -156,8 +152,6 @@ def nextturn(square):
 
     if old != new:
         changecolor(box, n=1)
-    else:
-        pass
 
 def makechanges(square):
     if grid[square][0] != grid[square][1]:
