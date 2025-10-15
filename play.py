@@ -93,8 +93,15 @@ def isactive(box):
         return True
     return False
 
+def inplay(box):
+    if box.x in range(0, WIDTH) and box.y in range(0, HEIGHT):
+        return True
+    return False
+
 def togglebox(x, y):
     box = Box((x, y))
+    if not inplay(box):
+        return
     if isactive((box.x, box.y)):
         grid[(box.x, box.y)] = (0, 0)
         event = "Died!"
