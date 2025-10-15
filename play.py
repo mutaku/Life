@@ -86,7 +86,7 @@ def amialive(box):
 
 def rounder(n, base=BOXSIZE):
     # always down
-    return int((n/base)*base)
+    return int(n // base *base)
 
 def isactive(box):
     if grid[box][0] == 1:
